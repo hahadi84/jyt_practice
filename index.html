@@ -91,6 +91,33 @@
     button:hover {
       background: var(--btn-hover);
     }
+
+    .history-wrap {
+      margin-top: 22px;
+      text-align: left;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .history-title {
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .history-list {
+      margin: 0;
+      padding-left: 20px;
+      max-height: 220px;
+      overflow-y: auto;
+      color: #374151;
+    }
+
+    .history-list li {
+      margin: 0 0 8px;
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
@@ -99,11 +126,17 @@
     <p>1~45 중 중복 없이 6개 번호를 생성합니다.</p>
     <section id="numbers" class="numbers" aria-live="polite"></section>
     <button id="generateBtn" type="button">번호 생성</button>
+    <section class="history-wrap">
+      <h2 class="history-title">뽑기 기록</h2>
+      <ol id="historyList" class="history-list"></ol>
+    </section>
   </main>
 
   <script>
     const numbersEl = document.getElementById("numbers");
     const generateBtn = document.getElementById("generateBtn");
+    const historyListEl = document.getElementById("historyList");
+    let drawCount = 0;
 
     function pickLottoNumbers() {
       const picked = new Set();
@@ -125,9 +158,15 @@
 
     function renderNumbers() {
       const nums = pickLottoNumbers();
+      drawCount += 1;
+
       numbersEl.innerHTML = nums
         .map((num) => `<span class="ball ${colorClassByNumber(num)}">${num}</span>`)
         .join("");
+
+      const item = document.createElement("li");
+      item.textContent = `${drawCount}회: ${nums.join(", ")}`;
+      historyListEl.prepend(item);
     }
 
     generateBtn.addEventListener("click", renderNumbers);
